@@ -37,3 +37,6 @@ override.tf.json
 Исключает файлы конфигурации командной строки:
 .terraformrc
 terraform.rc
+
+Задание №4 – Упрощаем себе жизнь
+Изменения через IDE Py Charm.
