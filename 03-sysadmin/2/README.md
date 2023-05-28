@@ -111,78 +111,81 @@
 Данное поведение хорошо демонстрируют следующие команды:
 ```console
 vagrant@vagrant:~$ pstree -pT
-systemd(1)─┬─VBoxService(840)
-           ├─accounts-daemon(627)
-           ├─atd(660)
-           ├─cron(654)
-           ├─dbus-daemon(628)
-           ├─irqbalance(634)
-           ├─login(681)───bash(1196)
-           ├─login(1205)───bash(1234)
-           ├─multipathd(526)
-           ├─networkd-dispat(635)
-           ├─polkitd(705)
-           ├─rsyslogd(636)
-           ├─snapd(640)
-           ├─sshd(696)───sshd(977)───sshd(1043)───bash(1044)───pstree(1437)
-           ├─systemd(1009)───(sd-pam)(1010)
-           ├─systemd-journal(353)
-           ├─systemd-logind(643)
-           ├─systemd-network(611)
-           ├─systemd-resolve(613)
-           ├─systemd-udevd(385)
-           └─udisksd(644)
+systemd(1)─┬─ModemManager(786)
+           ├─VBoxDRMClient(937)
+           ├─VBoxService(940)
+           ├─accounts-daemon(725)
+           ├─agetty(776)
+           ├─atd(763)
+           ├─cron(759)
+           ├─dbus-daemon(726)
+           ├─irqbalance(730)
+           ├─multipathd(626)
+           ├─networkd-dispat(731)
+           ├─polkitd(732)
+           ├─rsyslogd(733)
+           ├─snapd(737)
+           ├─sshd(796)───sshd(1406)───sshd(1447)───bash(1448)───pstree(1550)
+           ├─systemd(1106)───(sd-pam)(1107)
+           ├─systemd-journal(427)
+           ├─systemd-logind(748)
+           ├─systemd-network(708)
+           ├─systemd-resolve(710)
+           ├─systemd-udevd(463)
+           └─udisksd(749)
 vagrant@vagrant:~$
 
 ```
-Изначально мы находимся в процессе с PID **1044**, что видно по выводу команды, так как мы должны являться родителем процесса `pstree` **1437**
+Изначально мы находимся в процессе с PID **1448**, что видно по выводу команды, так как мы должны являться родителем процесса `pstree` **1550**
 
 После выполнения команды `bash 5>&1` дерево процессов примет следующий вид:
 ```console
+vagrant@vagrant:~$ bash 5>&1
 vagrant@vagrant:~$ pstree -pT
-systemd(1)─┬─VBoxService(840)
-           ├─accounts-daemon(627)
-           ├─atd(660)
-           ├─cron(654)
-           ├─dbus-daemon(628)
-           ├─irqbalance(634)
-           ├─login(681)───bash(1196)
-           ├─login(1205)───bash(1234)
-           ├─multipathd(526)
-           ├─networkd-dispat(635)
-           ├─polkitd(705)
-           ├─rsyslogd(636)
-           ├─snapd(640)
-           ├─sshd(696)───sshd(977)───sshd(1043)───bash(1044)───bash(1443)───pstree(1450)
-           ├─systemd(1009)───(sd-pam)(1010)
-           ├─systemd-journal(353)
-           ├─systemd-logind(643)
-           ├─systemd-network(611)
-           ├─systemd-resolve(613)
-           ├─systemd-udevd(385)
-           └─udisksd(644)
+systemd(1)─┬─ModemManager(786)
+           ├─VBoxDRMClient(937)
+           ├─VBoxService(940)
+           ├─accounts-daemon(725)
+           ├─agetty(776)
+           ├─atd(763)
+           ├─cron(759)
+           ├─dbus-daemon(726)
+           ├─irqbalance(730)
+           ├─multipathd(626)
+           ├─networkd-dispat(731)
+           ├─polkitd(732)
+           ├─rsyslogd(733)
+           ├─snapd(737)
+           ├─sshd(796)───sshd(1406)───sshd(1447)───bash(1448)───bash(1551)───pstree(1557)
+           ├─systemd(1106)───(sd-pam)(1107)
+           ├─systemd-journal(427)
+           ├─systemd-logind(748)
+           ├─systemd-network(708)
+           ├─systemd-resolve(710)
+           ├─systemd-udevd(463)
+           └─udisksd(749)
 vagrant@vagrant:~$
 ```
-То есть, процесс **1044** породил процесс `bash` с PID **1443**
+То есть, процесс **1448** породил процесс `bash` с PID **1551**
 
 У процесса открыты следующие файловые дескритпоры:
 
 ```console
 vagrant@vagrant:~$ ls -l /proc/$$/fd
 total 0
-lrwx------ 1 vagrant vagrant 64 Feb  9 10:20 0 -> /dev/pts/0
-lrwx------ 1 vagrant vagrant 64 Feb  9 10:20 1 -> /dev/pts/0
-lrwx------ 1 vagrant vagrant 64 Feb  9 10:20 2 -> /dev/pts/0
-lrwx------ 1 vagrant vagrant 64 Feb  9 10:20 255 -> /dev/pts/0
-lrwx------ 1 vagrant vagrant 64 Feb  9 10:20 5 -> /dev/pts/0
+lrwx------ 1 vagrant vagrant 64 May 28 17:50 0 -> /dev/pts/0
+lrwx------ 1 vagrant vagrant 64 May 28 17:50 1 -> /dev/pts/0
+lrwx------ 1 vagrant vagrant 64 May 28 17:50 2 -> /dev/pts/0
+lrwx------ 1 vagrant vagrant 64 May 28 17:50 255 -> /dev/pts/0
+lrwx------ 1 vagrant vagrant 64 May 28 17:50 5 -> /dev/pts/0
 vagrant@vagrant:~$
 ```
 
 Если выполнить команду `echo netology > /proc/$$/fd/5`, то слово `netology` выведется в окне текущего терминала.
 Если разбирать детально, то произойдёт следующее:
-1. Запустится встроенная в shell команда `echo` которая захочет отправить в `stdout` текущего процесса **1443** слово `netology`
+1. Запустится встроенная в shell команда `echo` которая захочет отправить в `stdout` текущего процесса **1551** слово `netology`
 2. Так как при исполнении команды указано перенаправление стандартного потока `stdout` (`>`), то вывод пойдёт, грубо говоря, на файловый дескриптор `5` текущего процесса (`/proc/$$/`), а именно bash с PID **1443**
-3. Но до этого, поток `5` был направлен на `stdout` родительского процесса, а именно bash с PID **1044**, который и выведет на экран слово `netology`
+3. Но до этого, поток `5` был направлен на `stdout` родительского процесса, а именно bash с PID **1448**, который и выведет на экран слово `netology`
 
 ---
 
@@ -315,12 +318,12 @@ vagrant@vagrant:~$
 
 ```console
 vagrant@vagrant:~$ ssh localhost 'ls -l /proc/$$/fd/'
-vagrant@localhost's password:
+vagrant@localhost's password: //password -> vagrant
 total 0
-lr-x------ 1 vagrant vagrant 64 Feb 10 10:23 0 -> pipe:[34117]
-l-wx------ 1 vagrant vagrant 64 Feb 10 10:23 1 -> pipe:[34118]
-l-wx------ 1 vagrant vagrant 64 Feb 10 10:23 2 -> pipe:[34119]
-lr-x------ 1 vagrant vagrant 64 Feb 10 10:23 3 -> /proc/2213/fd
+lr-x------ 1 vagrant vagrant 64 May 28 17:57 0 -> pipe:[29058]
+l-wx------ 1 vagrant vagrant 64 May 28 17:57 1 -> pipe:[29059]
+l-wx------ 1 vagrant vagrant 64 May 28 17:57 2 -> pipe:[29060]
+lr-x------ 1 vagrant vagrant 64 May 28 17:57 3 -> /proc/1615/fd
 vagrant@vagrant:~$
 ```
 
@@ -343,7 +346,7 @@ vagrant@vagrant:~$
 Для начала утилиту нужно установить: `sudo apt-get install reptyr`
 
 Для Ubuntu версии [Maverick](https://ru.wikipedia.org/wiki/Список_версий_Ubuntu#Выпуски) и выше учесть [ограничение работы системного вызова ptrace](https://github__com.teameo.ca/nelhage/reptyr#ptrace_scope-on-ubuntu-maverick-and-up), а именно до запуска `reptyr` выполнить команду: `echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope`, а после команду: `echo 1 | sudo tee /proc/sys/kernel/yama/ptrace_scope`
-
+	
 Пример переноса программы `htop` в `screen`
 
 1. Запускаем программу `htop`
@@ -434,8 +437,8 @@ vagrant@vagrant:~$
     ```console
     vagrant@vagrant:~$ screen -r
     There are several suitable screens on:
-            1257.pts-0.vagrant      (02/11/2022 09:41:50 AM)        (Detached)
-            1180.pts-0.vagrant      (02/11/2022 09:37:33 AM)        (Detached)
+            1257.pts-0.vagrant      (05/28/2023 21:41:50 AM)        (Detached)
+            1180.pts-0.vagrant      (05/28/2023 21:37:33 AM)        (Detached)
     Type "screen [-d] -r [pid.]tty.host" to resume one of them.
     vagrant@vagrant:~$
     ```
