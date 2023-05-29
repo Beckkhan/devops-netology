@@ -293,7 +293,7 @@ WantedBy=multi-user.target
 
 - Сообщения от установленого расширения гостовой системы: строчки от `vboxguest:` и `vboxsf` (функция общего каталога)
 
-- Видна версия **VirtualBox**: `23:01:35.720097 main     VBoxService 6.1.30 r148432 (verbosity: 0) linux.amd64 (Nov 22 2021 16:16:32) release log`
+- Видна версия **VirtualBox**: `23:01:35.720097 main     VBoxService 6.1.30 r148432 (verbosity: 0) linux.amd64 (May 29 2023 16:16:32) release log`
 
 - Явное сообщение от **SystemD** об обнаружении виртуализации: `systemd[1]: Detected virtualization oracle.`
 
@@ -540,8 +540,8 @@ func
 
 ```console
 vagrant@vagrant:~$ dmesg -T
-[Wed Feb 16 11:52:37 2022] cgroup: fork rejected by pids controller in /user.slice/user-1000.slice/session-1.scope
-[Wed Feb 16 11:52:43 2022] hrtimer: interrupt took 1255256 ns
+[Mon May 29 11:52:37 2022] cgroup: fork rejected by pids controller in /user.slice/user-1000.slice/session-1.scope
+[Mon May 29 11:52:43 2022] hrtimer: interrupt took 1255256 ns
 vagrant@vagrant:~$
 ```
 
@@ -553,7 +553,7 @@ vagrant@vagrant:~$
 vagrant@vagrant:~$ systemctl status user.slice
 ● user.slice - User and Session Slice
      Loaded: loaded (/lib/systemd/system/user.slice; static; vendor preset: enabled)
-     Active: active since Wed 2022-02-16 11:47:18 UTC; 1h 19min ago
+     Active: active since Mon 2023-05-29 11:47:18 UTC; 1h 19min ago
        Docs: man:systemd.special(7)
       Tasks: 7
      Memory: 55.3M
@@ -580,7 +580,7 @@ vagrant@vagrant:~$ systemctl status user-1000.slice
      Loaded: loaded
     Drop-In: /usr/lib/systemd/system/user-.slice.d
              └─10-defaults.conf
-     Active: active since Wed 2022-02-16 11:47:46 UTC; 1h 19min ago
+     Active: active since Mon 2023-05-29 11:47:46 UTC; 1h 19min ago
        Docs: man:user@.service(5)
       Tasks: 7 (limit: 10247)
      Memory: 55.1M
