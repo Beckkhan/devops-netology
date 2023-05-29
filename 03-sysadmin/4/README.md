@@ -236,7 +236,7 @@ WantedBy=multi-user.target
 Исследуя полный вывод `dmesg` можно заметить много строк, характеризующих запуск на виртуальной машине:
 
 ```console
-[    0.000000] Linux version 5.4.0-91-generic (buildd@lcy01-amd64-017) (gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)) #102-Ubuntu SMP Fri Nov 5 16:31:28 UTC 2021 (Ubuntu 5.4.0-91.102-generic 5.4.151)
+[    0.000000] Linux version 5.4.0-91-generic (buildd@lcy01-amd64-017) (gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)) #102-Ubuntu SMP Mon May 29 16:31:28 UTC 2021 (Ubuntu 5.4.0-91.102-generic 5.4.151)
 [    0.000000] Command line: BOOT_IMAGE=/vmlinuz-5.4.0-91-generic root=/dev/mapper/ubuntu--vg-ubuntu--lv ro net.ifnames=0 biosdevname=0
 ...
 [    0.000000] DMI: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
@@ -271,11 +271,11 @@ WantedBy=multi-user.target
 [    6.901073] vboxsf: SHFL_FN_MAP_FOLDER failed for '/vagrant': share not found
 ...
 [   13.043580] vboxvideo: loading version 6.1.30 r148432
-[   13.076600] 23:01:35.720097 main     VBoxService 6.1.30 r148432 (verbosity: 0) linux.amd64 (Nov 22 2021 16:16:32) release log
+[   13.076600] 23:01:35.720097 main     VBoxService 6.1.30 r148432 (verbosity: 0) linux.amd64 (May 29 2023 16:16:32) release log
                23:01:35.720100 main     Log opened 2022-02-15T23:01:35.720091000Z
 [   13.076646] 23:01:35.720187 main     OS Product: Linux
 [   13.076675] 23:01:35.720221 main     OS Release: 5.4.0-91-generic
-[   13.076704] 23:01:35.720250 main     OS Version: #102-Ubuntu SMP Fri Nov 5 16:31:28 UTC 2021
+[   13.076704] 23:01:35.720250 main     OS Version: #102-Ubuntu SMP Mon May 29 16:31:28 UTC 2021
 [   13.076747] 23:01:35.720279 main     Executable: /opt/VBoxGuestAdditions-6.1.30/sbin/VBoxService
 ```
 
