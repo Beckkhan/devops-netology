@@ -261,16 +261,184 @@ vagrant@vagrant:~$
 
 #### **Шаг 6.** Повторите задание 5 в утилите `mtr`. На каком участке наибольшая задержка — delay?
 
+![6_Question](images/6.png)
 
+Данные программы MTR показывают, что самые большие задержки возникают на узле 142.251.51.187, связанном с автономной системой AS15169.
 
 ---
-**Шаг 7.** Какие DNS-сервера отвечают за доменное имя dns.google? Какие A-записи? Воспользуйтесь утилитой `dig`.
 
-**Шаг 8.** Проверьте PTR записи для IP-адресов из задания 7. Какое доменное имя привязано к IP? Воспользуйтесь утилитой `dig`.
+#### **Шаг 7.** Какие DNS-сервера отвечают за доменное имя dns.google? Какие A-записи? Воспользуйтесь утилитой `dig`.
+
+```bash
+vagrant@vagrant:~$ dig +trace dns.google
+
+; <<>> DiG 9.16.1-Ubuntu <<>> +trace dns.google
+;; global options: +cmd
+.			7145	IN	NS	m.root-servers.net.
+.			7145	IN	NS	l.root-servers.net.
+.			7145	IN	NS	k.root-servers.net.
+.			7145	IN	NS	j.root-servers.net.
+.			7145	IN	NS	i.root-servers.net.
+.			7145	IN	NS	h.root-servers.net.
+.			7145	IN	NS	g.root-servers.net.
+.			7145	IN	NS	f.root-servers.net.
+.			7145	IN	NS	e.root-servers.net.
+.			7145	IN	NS	d.root-servers.net.
+.			7145	IN	NS	c.root-servers.net.
+.			7145	IN	NS	b.root-servers.net.
+.			7145	IN	NS	a.root-servers.net.
+;; Received 262 bytes from 127.0.0.53#53(127.0.0.53) in 4 ms
+
+google.			172800	IN	NS	ns-tld5.charlestonroadregistry.com.
+google.			172800	IN	NS	ns-tld1.charlestonroadregistry.com.
+google.			172800	IN	NS	ns-tld3.charlestonroadregistry.com.
+google.			172800	IN	NS	ns-tld2.charlestonroadregistry.com.
+google.			172800	IN	NS	ns-tld4.charlestonroadregistry.com.
+google.			86400	IN	DS	6125 8 2 80F8B78D23107153578BAD3800E9543500474E5C30C29698B40A3DB2 3ED9DA9F
+google.			86400	IN	RRSIG	DS 8 1 86400 20230611050000 20230529040000 60955 . oX5I54Q0Ew5/FPgpwWvhrLBNgnjFHwA82EuWg1FVtDhXeM9TD++ApKo6 bk4GD6sG7MRrpgg3EOmmdBODt0DVyL2mhXurrP0IdVycsRcNko/TAFyO 6LYWXvwdQhiXXjrbtCFP92XtFY3SVBl0XOoL0ZRM8OExLOmsyQ/P/Mw9 0J0hsQgeZRVQ9tLiPXHioDmC+JgWSpxVUVRnieXZ4eRSRw/a6zIKajME jdc+96q9QMGSw6vMvUMLKVvdYSIy/rKNH9gyQ6GWssbrm45DMCuuUeq1 51n3QSiv0szYzo0d87UJ6J3+pV7U3DSSV0ngXtSpzShT6dXlCFNXIPSX jeNxTg==
+;; Received 758 bytes from 192.33.4.12#53(c.root-servers.net) in 48 ms
+
+dns.google.		10800	IN	NS	ns4.zdns.google.
+dns.google.		10800	IN	NS	ns1.zdns.google.
+dns.google.		10800	IN	NS	ns2.zdns.google.
+dns.google.		10800	IN	NS	ns3.zdns.google.
+dns.google.		3600	IN	DS	56044 8 2 1B0A7E90AA6B1AC65AA5B573EFC44ABF6CB2559444251B997103D2E4 0C351B08
+dns.google.		3600	IN	RRSIG	DS 8 2 3600 20230616214813 20230525214813 42193 google. O2POXm+aGH1B1o6Tg5YEo5t/S6sIbByO8EDvvteL5TGhf96ORv4yPlik Iu7QsONGv1MaDMezJbh5qmPulF3oXNihcjifcmVe2agTROo/Z+zv67Ti qTxDmGlvXhIyX0YvT7/yVmSLp4JSDLaBH8mxdMZuCF5eDxyibB3aBixr BcA=
+;; Received 506 bytes from 216.239.38.105#53(ns-tld4.charlestonroadregistry.com) in 16 ms
+
+dns.google.		900	IN	A	8.8.4.4
+dns.google.		900	IN	A	8.8.8.8
+dns.google.		900	IN	RRSIG	A 8 2 900 20230618191939 20230527191939 34681 dns.google. GGEB40je4qkf+SDtxbpjT3UssK7A8xLTQRB1WRW6yZC54bu5+ZjUyuI0 9I9IdP81TIY+j1QQ2OGKXAMfAnzJq6HAGQTgK3n6qcnpl0U+dUtsvqwo yqorRyBC1XcZWRG5I4YcfWRTvV64XgV4gueULxKyAqJNSNXgHY+kbRC/ kzE=
+;; Received 241 bytes from 216.239.34.114#53(ns2.zdns.google) in 40 ms
+
+vagrant@vagrant:~$
+```
+
+За доменное имя `dns.google` отвечают сервера c IP адресами `8.8.8.8` и `8.8.4.4` (`A` записи).
+
+По трассировке виден маршрут поиска:
+
+1. `.` - получено от 127.0.0.53
+
+1. `google.` - получено от 192.33.4.12 (c.root-servers.net)
+
+1. `dns.google.` - получено от 216.239.38.105 (ns-tld4.charlestonroadregistry.com)
+
+1. А записи получены от 216.239.34.114 (ns2.zdns.google)
+
+---
+
+#### **Шаг 8.** Проверьте PTR записи для IP-адресов из задания 7. Какое доменное имя привязано к IP? Воспользуйтесь утилитой `dig`.
 
 *В качестве ответов на вопросы приложите лог выполнения команд в консоли или скриншот полученных результатов.*
 
-----
+Обратный вызов к `8.8.8.8`:
+
+```bash
+vagrant@vagrant:~$ dig -x 8.8.8.8
+
+; <<>> DiG 9.16.1-Ubuntu <<>> -x 8.8.8.8
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 39478
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+;; QUESTION SECTION:
+;8.8.8.8.in-addr.arpa.		IN	PTR
+
+;; ANSWER SECTION:
+8.8.8.8.in-addr.arpa.	6320	IN	PTR	dns.google.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53)
+;; WHEN: Mon May 29 16:21:22 UTC 2023
+;; MSG SIZE  rcvd: 73
+```
+
+PTR запись `dns.google.`
+
+Обратный вызов к `8.8.4.4`:
+
+```bash
+vagrant@vagrant:~$ dig -x 8.8.4.4
+
+; <<>> DiG 9.16.1-Ubuntu <<>> -x 8.8.4.4
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 32034
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+;; QUESTION SECTION:
+;4.4.8.8.in-addr.arpa.		IN	PTR
+
+;; ANSWER SECTION:
+4.4.8.8.in-addr.arpa.	3367	IN	PTR	dns.google.
+
+;; Query time: 12 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53)
+;; WHEN: Mon May 29 16:21:37 UTC 2023
+;; MSG SIZE  rcvd: 73
+```
+
+PTR запись `dns.google.`
+
+Обратный вызов к `192.33.4.12`:
+
+```bash
+vagrant@vagrant:~$ dig -x 192.33.4.12
+
+; <<>> DiG 9.16.1-Ubuntu <<>> -x 192.33.4.12
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20067
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+;; QUESTION SECTION:
+;12.4.33.192.in-addr.arpa.	IN	PTR
+
+;; ANSWER SECTION:
+12.4.33.192.in-addr.arpa. 7551	IN	PTR	c.root-servers.net.
+
+;; Query time: 40 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53)
+;; WHEN: Mon May 29 16:26:19 UTC 2023
+;; MSG SIZE  rcvd: 85
+```
+
+PTR запись `c.root-servers.net.`
+
+---
+
+Использованные в лекции материалы:
+
+- `traceroute -An 8.8.8.8` - Показывать маршрут. `A` - показывает AS (автономные системы), `n` - скрывает доменные имена
+
+- `mtr -zn 8.8.8.8` - Показывать маршрут в реальном времени. `z` - показывает AS (автономные системы), `n` - скрывать доменные имена
+
+- `ping` - Проверяет доступность сетевого адреса
+
+- `whois` - Вывод информации об IP, `-h whois.radh.net <IP>` - запрос в базу. `-- '-i origin AS32331'` - показывает все диапазоны адресов автономной системы
+
+- `bgpq3` - Пакет автоматизации GBP фильтрации для CISCO и JUNIPER роутеров (`man 8 bgpq3`)
+
+- `dig` - Утилита поиска DNS (Требуется установка: `apt install dnsutils`)
+
+- `telnet <адрес> <порт>` - Пользовательский интерфейс к протоколу TELNET
+
+- `curl` - Отправка запросов на сервер
+
+- `httpie` - Отправка запросов по HTTP протоколу (более простой cURL, Требуется установка: `apt install httpie`)
+
+- `jq` - JSON процессор для коммандной строки (Требуется установка: `apt install jq`)
+
+
+---
 
 ### Правила приёма домашнего задания
 
